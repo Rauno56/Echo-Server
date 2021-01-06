@@ -8,7 +8,9 @@ RUN npm run build
 
 FROM node:lts-alpine
 WORKDIR /app
-COPY --from=build /build/src/global.json .
-COPY --from=build /build/dist/webserver.js .
+RUN mkdir src
+COPY --from=build /build/src/global.json ./src/
+COPY --from=build /build/dist/webserver.js ./src/
+COPY --from=build /build/package.json .
 
-ENTRYPOINT [ "node", "webserver" ]
+CMD [ "npm", "run", "start", "--" ]
